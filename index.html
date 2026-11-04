@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, ">
+<title>CareFlow</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#5A179A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lilas:#bc9df4;
+  --roxo-claro:#cdb4f6;
+  --violeta:#9b72cf;
+  --roxo:#6f42a1;
+  --roxo-escuro:#4d2b73;
+  --fundo:#faf7ff;
+  --branco:#fff;
+  --texto:#30263a;
+  --cinza:#77717d;
+  --borda:#e2d7ee;
+  --sucesso:#4e8b68;
+  --perigo:#b84b5b;
+  --font-size:16px;
+  --alto-contraste-fundo:#000;
+  --alto-contraste-texto:#fff;
+  --alto-contraste-link:#ffeb00;
+}
+*{box-sizing:border-box}
+
+.hidden{display:none!important}
+html{font-size:var(--font-size);scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--fundo);
+  color:var(--texto);
+  transition:.25s;
+}
+body.high-contrast{background:#000!important;color:#fff!important;color-scheme:dark}
+body.high-contrast #loginScreen,body.high-contrast .navbar,body.high-contrast .hero,
+body.high-contrast .info-card,body.high-contrast .table-wrap,body.high-contrast .booking-card,
+body.high-contrast .settings-card,body.high-contrast .empty,body.high-contrast .preview,
+body.high-contrast .booking-summary,body.high-contrast .setting-row,body.high-contrast .dropdown-menu{
+ background:#000!important;color:#fff!important;border:2px solid #fff!important;box-shadow:none!important}
+body.high-contrast h1,body.high-contrast h2,body.high-contrast h3,body.high-contrast p,
+body.high-contrast label,body.high-contrast .brand,body.high-contrast .page-title,
+body.high-contrast .page-desc,body.high-contrast .info-card p,body.high-contrast .hero p{color:#fff!important}
+body.high-contrast a{color:#00E0FF!important;text-decoration:underline;text-underline-offset:3px}
+body.high-contrast button{border:2px solid #fff!important;font-weight:800;box-shadow:none!important}
+body.high-contrast .primary,body.high-contrast .slot.selected{background:#FFDF00!important;color:#171000!important;border-color:#FFDF00!important}
+body.high-contrast .btn-confirm{background:#31F95F!important;color:#061b0b!important;border-color:#31F95F!important}
+body.high-contrast .btn-cancel{background:#FB24BE!important;color:#160010!important;border-color:#FB24BE!important}
+body.high-contrast input,body.high-contrast select,body.high-contrast textarea{background:#000!important;color:#fff!important;border:2px solid #00E0FF!important;max-width:100%}
+body.high-contrast th{background:#FFDF00!important;color:#171000!important}
+body.high-contrast td{background:#000!important;color:#fff!important;border-color:#fff!important}
+body.high-contrast .slot{background:#000!important;color:#00E0FF!important;border:2px solid #00E0FF!important}
+body.high-contrast .slot.unavailable{color:#fff!important;border-color:#686868!important}
+body.high-contrast .nav-links button{color:#fff!important}
+body.high-contrast .nav-links button.active{background:#00E0FF!important;color:#000!important}
+body.high-contrast .toast{background:#fff!important;color:#000!important;border:2px solid #000}
+body.high-contrast .login-card{background:#000!important;color:#fff!important;border:2px solid #fff}
+body.high-contrast .status.confirmed{color:#31F95F!important}
+body.high-contrast .status.pending{color:#FFDF00!important}
+body.high-contrast :focus-visible{outline:3px solid #FFDF00!important;outline-offset:3px}
+@media(max-width:700px){body.high-contrast .nav-links{flex-wrap:wrap;gap:6px}body.high-contrast .nav-links button{flex:1 1 auto}body.high-contrast table{display:block;max-width:100%;overflow-x:auto}}
+@media(max-width:430px){body.high-contrast .slot{min-width:0}}
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(135deg,var(--lilas),#e3d4f8 55%,var(--roxo-claro));
+}
+.login-card{
+  width:min(430px,100%);
+  background:var(--branco);
+  border-radius:24px;
+  padding:36px;
+  box-shadow:0 18px 50px rgba(148, 103, 198, 0.15);
+}
+.logo{
+  width:70px;height:70px;
+  border-radius:20px;
+  display:grid;place-items:center;
+  margin:0 auto 16px;
+  background:var(--lilas);
+  color:var(--roxo);
+  font-size:34px;
+}
+h1,h2,h3{margin-top:0}
+.login-card h1{text-align:center;color:var(--roxo-escuro)}
+.subtitle{text-align:center;color:var(--cinza);margin-bottom:28px}
+.field{margin-bottom:18px}
+.field label{display:block;font-weight:700;margin-bottom:7px}
+.field input,.field select{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--borda);
+  border-radius:12px;
+  outline:none;
+  background:#fff;
+  color:var(--texto);
+}
+.field input:focus,.field select:focus{border-color:var(--violeta);box-shadow:0 0 0 3px rgba(155,114,207,.15)}
+.primary{
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:14px 18px;
+  background:var(--roxo);
+  color:#fff;
+  font-weight:700;
+  transition:.2s;
+}
+.primary:hover{background:var(--roxo-escuro);transform:translateY(-1px)}
+
+#app{min-height:100vh}
+.navbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(187, 157, 221, 0.96);
+  border-bottom:1px solid var(--borda);
+  backdrop-filter:blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 5%;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--roxo-escuro)}
+.logged-user{font-size:.86rem;font-weight:700;padding:8px 12px;border:1px solid var(--borda);border-radius:10px;max-width:260px;overflow-wrap:anywhere}
+.brand-icon{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;background:var(--lilas);
+}
+.nav-links{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.nav-links button{
+  border:0;background:transparent;color:var(--texto);
+  padding:10px 13px;border-radius:10px;
+}
+.nav-links button:hover,.nav-links button.active{background:var(--lilas);color:var(--roxo-escuro);font-weight:700}
+.logout{
+  border:1px solid var(--borda)!important;
+  color:var(--roxo)!important;
+}
+main{width:min(1150px,90%);margin:0 auto;padding:35px 0 60px}
+.view{display:none}
+.view.active{display:block}
+.page-title{color:var(--roxo-escuro);margin-bottom:7px}
+.page-desc{color:var(--cinza);margin-top:0}
+
+.hero{
+  display:grid;grid-template-columns:1.4fr .8fr;gap:24px;
+  background:linear-gradient(135deg,var(--lilas),#f7f1ff);
+  padding:35px;border-radius:24px;margin-bottom:28px;
+}
+.hero h2{font-size:2rem;color:var(--roxo-escuro);margin-bottom:12px}
+.hero p{line-height:1.7}
+.hero-art{display:grid;place-items:center;font-size:110px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.info-card{
+  background:#fff;border:1px solid var(--borda);border-radius:18px;padding:22px;
+  box-shadow:0 8px 25px rgba(80,45,120,.06)
+}
+.info-card .icon{font-size:32px;margin-bottom:10px}
+.info-card h3{color:var(--roxo);margin-bottom:8px}
+.info-card p{color:var(--cinza);line-height:1.55}
+
+.table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--borda);border-radius:18px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:16px;border-bottom:1px solid var(--borda)}
+th{background:var(--lilas);color:var(--roxo-escuro)}
+tr:last-child td{border-bottom:0}
+.status{font-weight:700}
+.status.confirmed{color:#075985;font-weight:800}
+.status.pending{color:#7c4a03;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  border:0;border-radius:9px;padding:9px 12px;font-weight:700
+}
+.btn-confirm{background:#075985;color:#fff;border:2px solid #075985}
+.btn-cancel{background:#991b1b;color:#fff;border:2px solid #991b1b}
+.empty{
+  padding:35px;text-align:center;background:#fff;border:1px dashed var(--borda);
+  border-radius:18px;color:var(--cinza)
+}
+
+.booking-card,.settings-card{
+  background:#fff;border:1px solid var(--borda);border-radius:20px;padding:25px;
+  max-width:760px;
+}
+.slots{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;
+  margin-top:10px;margin-bottom:22px;
+}
+.slot{
+  border:1px solid var(--borda);background:#faf7ff;border-radius:10px;padding:11px;
+  color:var(--roxo-escuro)
+}
+.slot:hover,.slot.selected{background:var(--roxo);color:#fff;border-color:var(--roxo)}
+.slot.unavailable{
+  background:#e5e7eb;color:#4b5563;border:2px solid #9ca3af;
+  opacity:1;text-decoration:line-through;cursor:not-allowed;
+  font-weight:700
+}
+.booking-summary{
+  background:var(--lilas);padding:15px;border-radius:12px;margin:18px 0;
+}
+.setting-row{
+  padding:20px 0;border-bottom:1px solid var(--borda);
+}
+.setting-row:last-child{border-bottom:0}
+.setting-row h3{margin-bottom:6px}
+.setting-row p{color:var(--cinza);margin-top:0}
+.range-line{display:flex;align-items:center;gap:15px}
+.range-line input{flex:1;accent-color:var(--roxo)}
+.preview{
+  padding:15px;background:var(--fundo);border:1px solid var(--borda);border-radius:12px;
+  margin-top:12px;
+}
+.switch{
+  display:flex;align-items:center;gap:12px;font-weight:700;
+}
+.switch input{width:20px;height:20px;accent-color:var(--roxo)}
+.toast{
+  position:fixed;right:20px;bottom:20px;z-index:100;
+  background:var(--roxo-escuro);color:#fff;padding:14px 18px;border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  opacity:0;transform:translateY(20px);pointer-events:none;transition:.25s
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:800px){
+  .navbar{position:relative;flex-direction:column;gap:10px;align-items:stretch}
+  .brand{justify-content:center}
+  .nav-links{display:grid;grid-template-columns:repeat(2,1fr);width:100%;gap:6px}
+  .nav-links button{width:100%;min-height:44px}
+  .hero{grid-template-columns:1fr}
+  .hero-art{display:none}
+  .cards{grid-template-columns:1fr}
+  main{padding-top:24px}
+}
+
+@media(max-width:700px){.navbar{align-items:flex-start;flex-direction:column;gap:10px}.nav-links{display:flex;flex-wrap:wrap;width:100%;gap:6px}.nav-btn{max-width:100%}main{padding:12px}.hero{grid-template-columns:1fr;gap:16px}.logged-user{max-width:100%;overflow-wrap:anywhere}}
+
+:root{
+  --lilas:#A07BF6;
+  --roxo-claro:#CBBAFF;
+  --violeta:#A07BF6;
+  --roxo:#5A179A;
+  --roxo-escuro:#421078;
+  --fundo:#F8F6FF;
+  --branco:#FFFFFF;
+  --texto:#241B31;
+  --cinza:#686868;
+  --borda:#DED6FF;
+  --sucesso:#16823B;
+  --perigo:#A61B1B;
+  --font-size:16px;
+}
+html{font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+body{font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.55;letter-spacing:.005em;background:var(--fundo);color:var(--texto)}
+h1,h2,h3,h4,.page-title,.brand,.header-brand{font-family:'Manrope','DM Sans',sans-serif;letter-spacing:-.025em}
+h1,h2,h3{line-height:1.2}
+button,input,select,textarea{font-family:inherit;letter-spacing:inherit}
+button{transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button:hover:not(:disabled){filter:saturate(1.06)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #00E0FF;outline-offset:3px}
+input,select,textarea{border-radius:12px;transition:border-color .18s ease,box-shadow .18s ease}
+input:focus,select:focus,textarea:focus{border-color:#A07BF6!important;box-shadow:0 0 0 4px #A07BF626!important}
+.login-screen,#loginScreen{background:radial-gradient(ellipse at top left,#CBBAFF 0%,#DED6FF 38%,#F8F6FF 78%)}
+.login-card{border:1px solid #FFFFFF;border-radius:28px;box-shadow:0 24px 70px #42107820;padding:clamp(24px,4vw,40px)}
+.logo{border-radius:22px;width:76px;height:76px}
+.brand-icon{border-radius:13px;width:42px;height:42px}
+.navbar,.header{background:rgba(255,255,255,.94);border-bottom:1px solid #DED6FF;box-shadow:0 4px 22px #4210780A;backdrop-filter:blur(16px)}
+.brand,.header-brand{color:#5A179A}
+.nav-links button,.nav-btn{border-radius:12px;font-weight:600;transition:all .18s ease}
+.nav-links button:hover,.nav-links button.active{background:#DED6FF;color:#421078}
+.hero{background:linear-gradient(130deg,#DED6FF 0%,#FFFFFF 78%);border:1px solid #CBBAFF;border-radius:28px;padding:clamp(24px,4vw,40px);box-shadow:0 12px 34px #4210780D}
+.hero h2{font-weight:800;letter-spacing:-.04em}
+.info-card,.booking-card,.settings-card,.card,.table-wrap,.empty,.preview,.mini-panel,.dropdown-menu{border-color:#DED6FF;border-radius:20px;box-shadow:0 8px 28px #4210780A}
+.info-card,.booking-card,.settings-card,.card{padding:clamp(18px,2.5vw,28px)}
+.info-card:hover{transform:translateY(-2px);box-shadow:0 14px 32px #42107812}
+.page-title{font-weight:800;letter-spacing:-.035em;color:#5A179A}
+.page-desc{line-height:1.65;color:#686868}
+.primary,.login-card button:not(.close-modal){background:#5A179A;color:#FFFFFF;border:2px solid #5A179A;border-radius:13px;font-weight:700;box-shadow:0 5px 12px #5A179A20}
+.primary:hover,.login-card button:not(.close-modal):hover{background:#421078;border-color:#421078;box-shadow:0 8px 18px #5A179A2B;transform:translateY(-1px)}
+
+.btn-confirm{background:#31F95F!important;color:#102417!important;border:2px solid #159A39!important;font-weight:800;border-radius:11px}
+.btn-cancel{background:#FB24BE!important;color:#21051B!important;border:2px solid #A90B7C!important;font-weight:800;border-radius:11px}
+.slot.selected{background:#5A179A!important;color:#FFFFFF!important;border-color:#5A179A!important;box-shadow:0 0 0 3px #A07BF633}
+.slot:not(.unavailable):hover{border-color:#A07BF6;box-shadow:0 5px 15px #5A179A18;transform:translateY(-1px)}
+th{background:#DED6FF!important;color:#421078!important;font-weight:800}
+th,td{padding:14px 16px}
+tr:hover td{background:#F8F6FF}
+.status.confirmed{color:#146B30;font-weight:800}.status.pending{color:#7A5600;font-weight:800}
+.calendar-btn,.dropdown-toggle,.btn{border-radius:12px}
+.calendar-btn:hover,.dropdown-toggle:hover{background:#DED6FF;border-color:#A07BF6}
+.calendar-views{background:#F0EBFF;border-radius:12px}
+.calendar-day{transition:background-color .15s ease}
+.calendar-day.today{background:#F4EFFF}
+.calendar-day.today .day-number{background:#5A179A}
+.calendar-event{border-radius:8px;padding:7px 8px}
+.toast{border-radius:14px;box-shadow:0 14px 36px #0003}
+#settingsModal{backdrop-filter:blur(8px)}
+.settings-header h2,.setting-row h3{color:#421078}
+.range-line input,.switch input{accent-color:#5A179A}
+@media(max-width:700px){
+  .navbar,.header{padding:10px 14px;gap:10px}
+  main{width:calc(100% - 28px);padding:22px 0 40px}
+  .hero{grid-template-columns:1fr;padding:22px;border-radius:22px;gap:12px}
+  .hero h2{font-size:1.6rem}
+  .hero-art{font-size:72px;min-height:90px}
+  .cards{grid-template-columns:1fr;gap:12px}
+  .info-card{padding:18px}
+  .table-wrap{border-radius:14px}
+  th,td{padding:10px 11px}
+  .login-card{border-radius:22px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+body{background:radial-gradient(ellipse at 0% 0%,#DED6FF70 0,transparent 32%),#F8F6FF}
+.hero{position:relative;overflow:hidden}
+.hero:after{content:"✿";position:absolute;right:clamp(16px,4vw,48px);bottom:-24px;font-size:clamp(70px,10vw,130px);color:#A07BF6;opacity:.13;pointer-events:none}
+body.high-contrast .hero:after{color:#FFDF00;opacity:.4}
+
+.navbar{position:sticky;background:linear-gradient(110deg,#fff 0%,#faf7ff 48%,#e8dcff 100%);border-bottom:1px solid #ded6ff;box-shadow:0 9px 28px rgba(66,16,120,.10);overflow:visible;gap:14px}
+.navbar:before{content:"✧　✿";position:absolute;right:25%;top:-13px;font-size:3.4rem;color:#A07BF6;opacity:.14;pointer-events:none;transform:rotate(-12deg)}
+.brand{position:relative;z-index:1;gap:10px;min-width:0}.client-logo-wrap{display:flex;align-items:center;justify-content:center;padding:2px 7px;background:#fff;border:1px solid #e5d9fa;border-radius:13px;box-shadow:0 5px 15px rgba(66,16,120,.09)}.client-wordmark{display:block;width:clamp(82px,10vw,118px);height:clamp(44px,5vw,62px);object-fit:contain}.client-brand-text{display:flex;flex-direction:column;line-height:1.15;gap:4px}.client-brand-text small{font-size:.75rem;font-weight:600;color:#686868}
+body{background:radial-gradient(ellipse at 5% 16%,rgba(203,186,255,.32),transparent 30%),radial-gradient(ellipse at 96% 64%,rgba(222,214,255,.55),transparent 31%),radial-gradient(ellipse at 52% 100%,rgba(160,123,246,.10),transparent 38%),#F8F6FF}
+.site-footer{position:relative;overflow:hidden;margin-top:34px;padding:27px 18px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;color:#421078;background:linear-gradient(120deg,#f4edff,#fff 48%,#e8dcff);border-top:1px solid #ded6ff}.site-footer:before,.site-footer:after{content:"✿";position:absolute;color:#a07bf6;opacity:.22;font-size:3.4rem;pointer-events:none}.site-footer:before{left:clamp(10px,8vw,100px);top:-8px}.site-footer:after{right:clamp(10px,8vw,100px);bottom:-18px}.site-footer strong{font-family:'Manrope','DM Sans',sans-serif}.site-footer span{font-weight:600}.site-footer small{color:#686868}.footer-flower{color:#A07BF6;letter-spacing:.3em;font-size:1.2rem}
+body.high-contrast .navbar{background:#000!important;border-bottom:2px solid #FFDF00!important}body.high-contrast .client-logo-wrap{background:#fff!important;background-image:none!important;border:2px solid #FFDF00!important}body.high-contrast .client-wordmark{visibility:visible!important;opacity:1!important;filter:none!important}body.high-contrast .client-brand-text small,body.high-contrast .site-footer small{color:#fff!important}body.high-contrast .site-footer{background:#000!important;color:#fff!important;border-top:2px solid #FFDF00!important}body.high-contrast .site-footer:before,body.high-contrast .site-footer:after,body.high-contrast .footer-flower{color:#FFDF00!important;opacity:.8}
+@media(max-width:650px){.navbar{gap:8px;padding:9px 10px;flex-wrap:wrap}.brand{gap:7px;font-size:.88rem}.client-logo-wrap{padding:2px 5px}.client-wordmark{width:72px;height:40px}.client-brand-text small{display:none}.nav-links{flex-wrap:wrap;gap:6px}.site-footer{margin-top:24px;padding:24px 14px}.site-footer:before{left:6px}.site-footer:after{right:6px}}
+
+body.high-contrast button {
+  box-sizing: border-box !important;
+  min-height: 44px;
+  font-size: inherit;
+  line-height: inherit;
+  transform: none;
+}
+
+body.high-contrast button {
+  border-width: 0 !important;
+  box-shadow: inset 0 0 0 2px currentColor !important;
+}
+body.high-contrast button:focus-visible {
+  outline: 3px solid #FFDF00 !important;
+  outline-offset: 2px;
+}
+@media (max-width: 700px) {
+  body.high-contrast .nav-links button,
+  body.high-contrast .calendar-toolbar button { flex: 0 1 auto !important; }
+}
+
+:root{--roxo-medio:#6A2BC4}
+[hidden]{display:none!important}
+.ic{width:1.2em;height:1.2em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle;pointer-events:none}
+.primary,.btn,.nav-links button,.logged-user{display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2}
+.login-card button.primary,#bookBtn{display:flex}
+.logged-user{justify-content:flex-start;background:#fff}
+.logged-user .ic{color:var(--roxo)}
+.nav-links{align-items:center}
+.nav-links button .ic{width:1.15em;height:1.15em}
+
+.client-logo-wrap{background:transparent;border:0;box-shadow:none;padding:0}
+.client-wordmark{width:46px;height:46px;object-fit:contain}
+.client-brand-text{font-family:'Manrope','DM Sans',sans-serif;font-size:1.05rem;letter-spacing:-.02em;text-align:left}
+.login-logo{display:block;width:80px;height:80px;object-fit:contain;margin:0 auto 12px}
+.login-card h1{margin:0 0 6px;font-size:clamp(1.5rem,3vw,1.9rem)}
+.subtitle{margin-top:0}
+.field label{text-align:left}
+.hero:after,.navbar:before,.site-footer:before,.site-footer:after{content:none!important}
+.hero{align-items:center}
+.hero>div:first-child{text-align:left}
+.hero-art{font-size:inherit}
+.hero-logo{width:clamp(90px,14vw,150px);height:auto;opacity:.9}
+.info-card{text-align:left}
+.info-card .icon{width:50px;height:50px;border-radius:14px;background:#F0EBFF;color:var(--roxo);display:grid;place-items:center;font-size:inherit;margin-bottom:14px}
+.info-card .icon .ic{width:26px;height:26px}
+
+.booking-summary{background:var(--roxo-medio);color:#fff;line-height:1.55}
+.booking-summary strong{color:#fff}
+.btn-reset{background:var(--roxo-medio);color:#fff;border:2px solid var(--roxo-medio)}
+.btn-reset:hover{background:var(--roxo-escuro);border-color:var(--roxo-escuro)}
+.btn-cancel{background:#B4106F!important;color:#fff!important;border:2px solid #8F0D58!important}
+
+th,td{vertical-align:middle}
+.actions .btn{padding:9px 14px}
+.actions .ic{width:1.05em;height:1.05em}
+
+.field-hint{display:block;margin-top:7px;color:var(--cinza);font-size:.84rem;line-height:1.4}
+.slots-note{grid-column:1/-1;color:var(--cinza);padding:10px 0;font-size:.92rem;line-height:1.5}
+.slot{display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.25;min-height:44px}
+.slots{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.booking-card,.settings-card{max-width:760px}
+.field select,.field input{min-height:46px}
+
+body.high-contrast .info-card .icon{background:#000!important;color:#fff!important;border:1px solid #fff}
+body.high-contrast .booking-summary{color:#fff!important}
+body.high-contrast .logged-user{background:#000!important}
+body.high-contrast .hero-logo{background:#fff;border-radius:16px;padding:6px}
+
+@media(max-width:800px){
+  .navbar{padding:10px 14px}
+  .logged-user{grid-column:1/-1;max-width:none}
+  .nav-links button{padding:10px 8px;font-size:.92rem}
+}
+@media(max-width:700px){
+  .nav-links{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  main{width:calc(100% - 28px);padding:20px 0 36px}
+  .hero{padding:22px}
+  .hero-art{display:none}
+  .booking-card,.settings-card{padding:18px}
+  .toast{left:14px;right:14px;bottom:14px;text-align:center}
+}
+@media(max-width:640px){
+  .table-wrap{background:transparent;border:0;box-shadow:none;overflow:visible}
+  table,thead,tbody,tr,td{display:block;width:100%}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  tr{background:#fff;border:1px solid var(--borda);border-radius:16px;margin-bottom:12px;padding:6px 14px;box-shadow:0 6px 18px #4210780A}
+  td{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0!important;border-bottom:1px solid #EEE8FF;text-align:right}
+  td:last-child{border-bottom:0}
+  td::before{content:attr(data-label);font-weight:700;color:var(--roxo-escuro);text-align:left;font-size:.86rem}
+  td[data-label="Ações"]{flex-direction:column;align-items:stretch;text-align:left}
+  td[data-label="Ações"]::before{display:none}
+  td[data-label="Ações"] .actions{justify-content:flex-end}
+  tr:hover td{background:transparent}
+}
+@media(max-width:480px){
+  .client-brand-text{font-size:.95rem}
+  .nav-links{grid-template-columns:1fr 1fr}
+  .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero h2{font-size:1.45rem}
+  .page-title{font-size:1.35rem}
+  .login-card{padding:22px 18px}
+}
+@media(max-width:360px){.nav-links button{font-size:.84rem;gap:6px}}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#app{display:flex;flex-direction:column}
+#app main{flex:1 0 auto;width:min(1150px,90%)}
+.site-footer{margin-top:48px;flex-shrink:0}
+.site-footer strong{font-size:1.1rem}
+.footer-logo{width:42px;height:42px;object-fit:contain;margin-bottom:2px}
+
+.btn-confirm{background:#15803D!important;color:#fff!important;border:2px solid #166534!important}
+.btn-cancel{background:#C62828!important;color:#fff!important;border:2px solid #991B1B!important}
+.btn-confirm:hover{background:#166534!important}.btn-cancel:hover{background:#991B1B!important}
+
+.booking-layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(290px,30%,360px);gap:22px;align-items:start}
+.booking-steps{display:flex;flex-direction:column;gap:18px;min-width:0}
+.step-card,.summary-card{background:#fff;border:1px solid var(--borda);border-radius:22px;padding:clamp(18px,2.4vw,28px);box-shadow:0 8px 28px #4210780A}
+.step-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.step-num{width:38px;height:38px;border-radius:50%;background:var(--roxo-medio);color:#fff;display:grid;place-items:center;font-weight:800;flex:none;font-family:'Manrope','DM Sans',sans-serif}
+.step-head h3{margin:0 0 3px;color:var(--roxo-escuro);font-size:1.15rem}
+.step-head p{margin:0;color:var(--cinza);font-size:.92rem;line-height:1.45}
+.date-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.date-row input{flex:1 1 210px;max-width:290px;width:auto;padding:12px 14px;border:1px solid var(--borda);border-radius:12px;margin:0;min-height:50px;background:#fff}
+.quick-dates{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:2px solid var(--borda);background:#fff;color:var(--roxo-escuro);border-radius:999px;padding:10px 20px;font-weight:700;min-height:48px}
+.chip:hover{border-color:var(--violeta);background:#F4EFFF}
+.chip.active{background:var(--roxo-medio);color:#fff;border-color:var(--roxo-medio)}
+.pro-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.pro-card{display:flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--borda);background:#fff;border-radius:18px;padding:14px 16px;min-height:76px;color:var(--texto);width:100%}
+.pro-card:hover{border-color:var(--violeta);background:#FBF9FF}
+.pro-card.selected{border-color:var(--roxo-medio);background:#F4EFFF;box-shadow:0 0 0 3px #A07BF633}
+.pro-avatar{width:46px;height:46px;border-radius:50%;background:#EDE5FF;color:var(--roxo);display:grid;place-items:center;font-weight:800;flex:none;font-size:.95rem}
+.pro-card.selected .pro-avatar{background:var(--roxo-medio);color:#fff}
+.pro-name{display:block;font-weight:700;line-height:1.25}
+.pro-role{display:block;font-size:.8rem;color:var(--cinza);line-height:1.3;margin-top:2px}
+.slots{display:block;margin:0}
+.slot-group h4{margin:0 0 10px;color:var(--roxo-escuro);font-size:1rem}
+.slot-group+.slot-group{margin-top:18px}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.slot-grid .slot{min-height:50px;font-weight:600}
+.booking-aside{position:sticky;top:96px}
+.summary-card h3{margin:0 0 14px;color:var(--roxo-escuro);font-size:1.2rem}
+.sum-list{margin:0 0 16px;display:block}
+.sum-list>div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 0;border-bottom:1px solid #EEE8FF}
+.sum-list dt{color:var(--cinza);font-weight:600}
+.sum-list dd{margin:0;font-weight:700;text-align:right;color:var(--texto)}
+.summary-card .booking-summary{margin:0 0 16px;border-radius:14px;padding:14px 16px}
+.summary-card .primary{min-height:54px;font-size:1.05rem}
+.summary-card .primary:disabled{background:#B9A9DA;border-color:#B9A9DA;box-shadow:none;cursor:not-allowed;transform:none}
+body.high-contrast .step-card,body.high-contrast .summary-card{background:#000!important;color:#fff!important;border:2px solid #fff!important;box-shadow:none!important}
+body.high-contrast .step-head h3,body.high-contrast .summary-card h3,body.high-contrast .slot-group h4,body.high-contrast .step-head p,body.high-contrast .sum-list dt,body.high-contrast .sum-list dd,body.high-contrast .pro-role,body.high-contrast .pro-name{color:#fff!important}
+body.high-contrast .pro-card,body.high-contrast .chip{background:#000!important;color:#fff!important}
+body.high-contrast .pro-card.selected,body.high-contrast .chip.active{background:#FFDF00!important;color:#171000!important}
+body.high-contrast .pro-card.selected .pro-name,body.high-contrast .pro-card.selected .pro-role{color:#171000!important}
+body.high-contrast .pro-avatar{background:#000!important;color:#fff!important;border:1px solid #fff}
+@media(max-width:900px){
+  .booking-layout{grid-template-columns:minmax(0,1fr)}
+  .booking-aside{position:static}
+}
+@media(max-width:480px){
+  .pro-cards{grid-template-columns:minmax(0,1fr)}
+  .slot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .date-row input{max-width:none;flex-basis:100%}
+  .quick-dates{width:100%}.quick-dates .chip{flex:1}
+}
+
+body.high-contrast.high-contrast.high-contrast.high-contrast,body.high-contrast.high-contrast.high-contrast.high-contrast *,body.high-contrast.high-contrast.high-contrast.high-contrast *::before,body.high-contrast.high-contrast.high-contrast.high-contrast *::after{color:#fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast ::placeholder{color:#fff!important;opacity:.8}
+body.high-contrast.high-contrast.high-contrast.high-contrast a{text-decoration:underline}
+body.high-contrast.high-contrast.high-contrast.high-contrast .btn-confirm,body.high-contrast.high-contrast.high-contrast.high-contrast #saveAttendance{background:#0B6B2E!important;border-color:#fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .btn-cancel{background:#B3122B!important;border-color:#fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast #cancelAttendance,body.high-contrast.high-contrast.high-contrast.high-contrast .drawer-close,body.high-contrast.high-contrast.high-contrast.high-contrast .close-modal,body.high-contrast.high-contrast.high-contrast.high-contrast .speak-command,body.high-contrast.high-contrast.high-contrast.high-contrast .slot,body.high-contrast.high-contrast.high-contrast.high-contrast .slot.unavailable,body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-btn,body.high-contrast.high-contrast.high-contrast.high-contrast .chip,body.high-contrast.high-contrast.high-contrast.high-contrast .pro-card,body.high-contrast.high-contrast.high-contrast.high-contrast .pro-avatar,body.high-contrast.high-contrast.high-contrast.high-contrast .profile-icon,body.high-contrast.high-contrast.high-contrast.high-contrast .info-card .icon,body.high-contrast.high-contrast.high-contrast.high-contrast .availability-status,body.high-contrast.high-contrast.high-contrast.high-contrast select option,body.high-contrast.high-contrast.high-contrast.high-contrast th,body.high-contrast.high-contrast.high-contrast.high-contrast .toast,body.high-contrast.high-contrast.high-contrast.high-contrast tr,body.high-contrast.high-contrast.high-contrast.high-contrast .stat,body.high-contrast.high-contrast.high-contrast.high-contrast .mini-panel{background:#000!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .primary,body.high-contrast.high-contrast.high-contrast.high-contrast .slot.selected,body.high-contrast.high-contrast.high-contrast.high-contrast .pro-card.selected,body.high-contrast.high-contrast.high-contrast.high-contrast .chip.active,body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-views button.active,body.high-contrast.high-contrast.high-contrast.high-contrast .nav-links button.active,body.high-contrast.high-contrast.high-contrast.high-contrast .dropdown-action,body.high-contrast.high-contrast.high-contrast.high-contrast .btn-reset,body.high-contrast.high-contrast.high-contrast.high-contrast .login-card button,body.high-contrast.high-contrast.high-contrast.high-contrast .logout,body.high-contrast.high-contrast.high-contrast.high-contrast .contrast-btn,body.high-contrast.high-contrast.high-contrast.high-contrast .moon,body.high-contrast.high-contrast.high-contrast.high-contrast .step-num{background:#5A179A!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .primary:disabled{background:#333!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-btn:hover,body.high-contrast.high-contrast.high-contrast.high-contrast .pro-card:hover,body.high-contrast.high-contrast.high-contrast.high-contrast .chip:hover{background:#5A179A!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .voice-btn.listening{background:#b42318!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .stop-speech-btn{background:#dc2626!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast th{border-bottom:3px solid #fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast tr:hover td{background:#1a1a1a!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast td{border-color:#fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .toast{border:2px solid #fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-day.outside{background:#111!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-day.today .day-number{background:transparent!important;box-shadow:inset 0 0 0 3px #fff!important;font-weight:800}
+body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-event{border-left:6px solid #31F95F!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .calendar-event.pending{border-left-color:#FFB020!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast #saveAttendance{color:#fff!important}
+body.high-contrast.high-contrast.high-contrast.high-contrast .preview,body.high-contrast.high-contrast.high-contrast.high-contrast .attendance-meta,body.high-contrast.high-contrast.high-contrast.high-contrast .settings-card,body.high-contrast.high-contrast.high-contrast.high-contrast .step-card,body.high-contrast.high-contrast.high-contrast.high-contrast .summary-card{background:#000!important}
+body.high-contrast .footer-logo{filter:brightness(0) invert(1)}
+.bg-lotus{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-lotus img{position:absolute;width:clamp(120px,15vw,320px);height:auto;opacity:.1;user-select:none}
+.bg-lotus .l1{left:11%;top:9%;width:clamp(110px,13vw,280px);transform:rotate(-14deg)}
+.bg-lotus .l2{left:-3%;top:68%;width:clamp(130px,15vw,320px);transform:rotate(10deg)}
+.bg-lotus .l3{right:-2%;top:1%;width:clamp(120px,13vw,280px);transform:rotate(16deg)}
+.bg-lotus .l4{left:62%;top:38%;width:clamp(140px,17vw,360px);transform:rotate(-8deg)}
+.bg-lotus .l5{right:-2%;top:70%;width:clamp(130px,15vw,320px);transform:rotate(-12deg)}
+@media(max-width:700px){.bg-lotus img{width:36vw}.bg-lotus .l4{left:55%}}
+body.high-contrast .bg-lotus{display:none}
+main,.container,.login-card,.site-footer{position:relative;z-index:1}
+</style>
+</head>
+<body>
+<div class="bg-lotus" aria-hidden="true"><img class="l1" src="logo-lotus.png" alt=""><img class="l2" src="logo-lotus.png" alt=""><img class="l3" src="logo-lotus.png" alt=""><img class="l4" src="logo-lotus.png" alt=""><img class="l5" src="logo-lotus.png" alt=""></div>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6h.01"/></symbol>
+<symbol id="i-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+<symbol id="i-contrast-on" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"/></symbol>
+<symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+<symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6V6H9zM9 12h6M9 16h4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+<symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+<symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8M5 9.5V20h14V9.5M10 20v-6h4v6"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></symbol>
+<symbol id="i-calendar-plus" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7.4a4.2 4.2 0 0 1 7.5 2.3C19.5 15.4 12 20 12 20z"/></symbol>
+</svg>
+
+<section id="loginScreen">
+  <div class="login-card">
+    <img class="login-logo" src="logo-lotus.png" alt="Logo CareFlow">
+    <h1>CareFlow</h1>
+    <p class="subtitle">Seu momento de cuidado começa aqui.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="clientName">Nome:</label>
+        <input id="clientName" type="text" placeholder="Seu nome" required>
+      </div>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" placeholder="seuemail@exemplo.com" required>
+      </div>
+      <div class="field">
+        <label for="password">Senha</label>
+        <input id="password" type="password" placeholder="Digite sua senha" required>
+      </div>
+      <button class="primary" type="submit">Entrar</button>
+    </form>
+  </div>
+</section>
+
+<div id="app" class="hidden">
+  <nav class="navbar">
+    <div class="brand"><span class="client-logo-wrap"><img src="logo-lotus.png" alt="Logo CareFlow" class="client-wordmark"></span><span class="client-brand-text">CareFlow<small>Cuidado que acolhe</small></span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-view="home"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-home"/></svg> Início</button>
+      <button class="nav-btn" data-view="appointments"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg> Meus agendamentos</button>
+      <button class="nav-btn" data-view="booking"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-calendar-plus"/></svg> Agendar sessão</button>
+      <button class="nav-btn" data-view="settings"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-settings"/></svg> Configurações</button>
+      <span class="logged-user" id="loggedUserMain"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-user"/></svg><span>Não identificado</span></span>
+      <button id="logoutBtn" class="nav-btn logout"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-logout"/></svg> Sair</button>
+    </div>
+  </nav>
+
+  <main>
+    <section id="home" class="view active">
+      <div class="hero">
+        <div>
+          <h2>Cuide do corpo, relaxe a mente.</h2>
+          <p>A massoterapia reúne técnicas de massagem que podem ajudar no relaxamento, na redução da tensão muscular e na promoção do bem-estar.</p>
+          <button class="primary" style="width:auto" onclick="showView('booking')"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-calendar-plus"/></svg> Agendar uma sessão</button>
+        </div>
+        <div class="hero-art"><img src="logo-lotus.png" alt="" class="hero-logo"></div>
+      </div>
+      <h2 class="page-title">Benefícios da massoterapia</h2>
+      <p class="page-desc">Conheça alguns benefícios associados às técnicas de massagem.</p>
+      <div class="cards">
+        <article class="info-card">
+          <div class="icon"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-smile"/></svg></div><h3>Relaxamento</h3>
+          <p>As técnicas de massagem podem favorecer uma sensação de relaxamento e bem-estar.</p>
+        </article>
+        <article class="info-card">
+          <div class="icon"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-pulse"/></svg></div><h3>Alívio de tensão</h3>
+          <p>Pode auxiliar no alívio de tensões e desconfortos musculares, conforme a técnica utilizada.</p>
+        </article>
+        <article class="info-card">
+          <div class="icon"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg></div><h3>Bem-estar</h3>
+          <p>Um momento de autocuidado pode contribuir para uma rotina mais tranquila e equilibrada.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="appointments" class="view">
+      <h2 class="page-title">Meus agendamentos</h2>
+      <p class="page-desc">Confira suas próximas sessões.</p>
+      <div id="appointmentsContent"></div>
+    </section>
+
+    <section id="booking" class="view">
+      <h2 class="page-title">Agendar sessão</h2>
+      <p class="page-desc">Escolha o dia, o profissional e o horário em três passos simples.</p>
+      <div class="booking-layout">
+        <div class="booking-steps">
+          <div class="step-card">
+            <div class="step-head"><span class="step-num" aria-hidden="true">1</span><div><h3>Escolha o dia</h3><p>Hoje também é possível agendar, com pelo menos 30 minutos de antecedência.</p></div></div>
+            <label for="dateSelect" class="sr-only">Dia disponível</label>
+            <div class="date-row">
+              <input id="dateSelect" type="date">
+              <div class="quick-dates" role="group" aria-label="Atalhos de data">
+                <button type="button" class="chip" data-quick="0">Hoje</button>
+                <button type="button" class="chip" data-quick="1">Amanhã</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-head"><span class="step-num" aria-hidden="true">2</span><div><h3 id="proTitle">Escolha o profissional</h3><p>Selecione quem vai atender você.</p></div></div>
+            <div class="pro-cards" id="proCards" role="radiogroup" aria-labelledby="proTitle">
+              <button type="button" class="pro-card" role="radio" aria-checked="false" data-name="Mariana Oliveira"><span class="pro-avatar" aria-hidden="true">MO</span><span><span class="pro-name">Mariana Oliveira</span><span class="pro-role">Profissional de massoterapia</span></span></button>
+              <button type="button" class="pro-card" role="radio" aria-checked="false" data-name="Camila Souza"><span class="pro-avatar" aria-hidden="true">CS</span><span><span class="pro-name">Camila Souza</span><span class="pro-role">Profissional de massoterapia</span></span></button>
+              <button type="button" class="pro-card" role="radio" aria-checked="false" data-name="Juliana Mendes"><span class="pro-avatar" aria-hidden="true">JM</span><span><span class="pro-name">Juliana Mendes</span><span class="pro-role">Profissional de massoterapia</span></span></button>
+            </div>
+            <select id="therapistSelect" hidden aria-hidden="true" tabindex="-1">
+              <option value="">Selecione o profissional</option>
+              <option>Mariana Oliveira</option>
+              <option>Camila Souza</option>
+              <option>Juliana Mendes</option>
+            </select>
+          </div>
+
+          <div class="step-card">
+            <div class="step-head"><span class="step-num" aria-hidden="true">3</span><div><h3>Escolha o horário</h3><p>Horário riscado e cinza = ocupado ou indisponível; horário normal = disponível.</p></div></div>
+            <div id="slots" class="slots" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <aside class="booking-aside" aria-label="Resumo da sessão">
+          <div class="summary-card">
+            <h3>Resumo da sessão</h3>
+            <dl class="sum-list">
+              <div><dt>Data</dt><dd id="sumDate">—</dd></div>
+              <div><dt>Horário</dt><dd id="sumTime">—</dd></div>
+              <div><dt>Profissional</dt><dd id="sumPro">—</dd></div>
+            </dl>
+            <div id="bookingSummary" class="booking-summary hidden"></div>
+            <button id="bookBtn" class="primary" disabled><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg> Agendar sessão</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="settings" class="view">
+      <h2 class="page-title">Configurações</h2>
+      <p class="page-desc">Personalize a aparência e a acessibilidade do aplicativo.</p>
+      <div class="settings-card">
+        <div class="setting-row">
+          <h3>Tamanho da fonte</h3>
+          <p>Altere o tamanho do texto em todas as telas.</p>
+          <div class="range-line">
+            <span>A</span>
+            <input id="fontSize" type="range" min="14" max="22" step="1" value="16">
+            <span style="font-size:1.4rem">A</span>
+            <strong id="fontValue">16px</strong>
+          </div>
+          <div class="preview">Exemplo de texto: esta configuração altera a fonte de todo o aplicativo.</div>
+        </div>
+        <div class="setting-row">
+          <h3>Estilo da fonte</h3>
+          <p>Escolha o estilo de fonte utilizado no aplicativo.</p>
+          <select id="fontStyle" class="field input" style="max-width:350px">
+            <option value="'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif">DM Sans — padrão</option>
+            <option value="Arial, Helvetica, sans-serif">Arial — simples</option>
+            <option value="Georgia, serif">Georgia — clássico</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet MS — moderno</option>
+            <option value="'Courier New', monospace">Courier New — máquina de escrever</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <h3>Alto contraste</h3>
+          <p>Utiliza fundo preto, textos brancos e amarelo para links, melhorando a leitura.</p>
+          <label class="switch">
+            <input id="highContrast" type="checkbox">
+            Ativar alto contraste
+          </label>
+        </div>
+        <div class="setting-row">
+          <button id="resetSettings" class="btn btn-reset">Restaurar configurações</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><img class="footer-logo" src="logo-lotus.png" alt=""><strong>CareFlow</strong><span>Cuidar de quem cuida. Um atendimento de cada vez.</span><small>Bem-estar, acolhimento e organização profissional.</small></footer>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+let appointments = [];
+try {
+  const savedAppointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+  appointments = Array.isArray(savedAppointments) ? savedAppointments : [];
+} catch (_) {
+  appointments = [];
+}
+let selectedTime = null;
+
+const $ = id => document.getElementById(id);
+
+function saveAppointments(){
+  localStorage.setItem('appointments', JSON.stringify(appointments));
+}
+
+function showToast(message){
+  const toast = $('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function showView(view){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.remove('active'));
+  $(view).classList.add('active');
+  const btn = document.querySelector(`[data-view="${view}"]`);
+  if(btn) btn.classList.add('active');
+  if(view === 'appointments') renderAppointments();
+  if(view === 'booking') renderBooking();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('.nav-btn[data-view]').forEach(btn => {
+  btn.addEventListener('click', () => showView(btn.dataset.view));
+});
+
+function updateLoggedUser(){
+  const nome = localStorage.getItem('clientName') || '';
+  const el = $('loggedUserMain');
+  if(el){
+    el.innerHTML = '<svg class="ic" aria-hidden="true" focusable="false"><use href="#i-user"/></svg><span></span>';
+    el.lastElementChild.textContent = nome || 'Não identificado';
+  }
+}
+
+$('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const nameInput = $('clientName').value.trim();
+  const emailInput = $('email').value.trim();
+  const passInput = $('password').value;
+  
+  if(!nameInput || !emailInput || !passInput) {
+    showToast('Preencha seu nome, e-mail e senha.');
+    return;
+  }
+  
+  localStorage.setItem('clientName', nameInput);
+  localStorage.setItem('clientEmail', emailInput);
+  localStorage.setItem('consultedPerson', emailInput);
+  localStorage.setItem('clientLoggedIn', 'true');
+  
+  updateLoggedUser();
+  $('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
+  showToast('Você entrou com sucesso!');
+});
+
+$('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('clientLoggedIn');
+  localStorage.removeItem('clientEmail');
+  localStorage.removeItem('clientName');
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');$('password').value = '';
+  updateLoggedUser();
+});
+
+function renderAppointments(){
+  const content = $('appointmentsContent');
+  if(!appointments.length){
+    content.innerHTML = `<div class="empty"><h3>Nenhum agendamento</h3><p>Você ainda não possui sessões agendadas.</p><button class="primary" style="width:auto" onclick="showView('booking')"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-calendar-plus"/></svg> Agendar sessão</button></div>`;
+    return;
+  }
+  const sorted = [...appointments].sort((a,b) => new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));
+  content.innerHTML = `
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Data</th><th>Horário</th><th>Profissional</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody>
+      ${sorted.map(a => `
+        <tr>
+          <td data-label="Data">${formatDate(a.date)}</td>
+          <td data-label="Horário">${a.time}</td>
+          <td data-label="Profissional">${a.therapist}</td>
+          <td data-label="Status" class="status ${a.confirmed?'confirmed':'pending'}">${a.confirmed?'Confirmada':'Pendente'}</td>
+          <td data-label="Ações">
+            <div class="actions">
+              ${!a.confirmed ? `<button class="btn btn-confirm" onclick="confirmAppointment(${a.id})" aria-label="Confirmar consulta"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg> Confirmar</button>` : ''}
+              <button class="btn btn-cancel" onclick="cancelAppointment(${a.id})" aria-label="Cancelar consulta"><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-close"/></svg> Cancelar</button>
+            </div>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function formatDate(date){
+  return new Date(date+'T12:00:00').toLocaleDateString('pt-BR');
+}
+
+function confirmAppointment(id){
+  const a = appointments.find(x => x.id === id);
+  if(a){a.confirmed=true;saveAppointments();renderAppointments();showToast('Sessão confirmada!');}
+}
+
+function cancelAppointment(id){
+  if(confirm('Deseja realmente cancelar esta sessão?')){
+    appointments = appointments.filter(x => x.id !== id);
+    saveAppointments(); renderAppointments(); showToast('Sessão cancelada.');
+  }
+}
+
+function getSlots(){
+  return ['09:00','10:00','11:00','13:00','14:00','15:00','16:00','17:00'];
+}
+
+function isSlotOccupied(date, time, therapist){
+  return appointments.some(a =>
+    a.date === date &&
+    a.time === time &&
+    a.therapist === therapist
+  );
+}
+
+const MIN_ADVANCE_MINUTES = 30;
+const pad2 = n => String(n).padStart(2,'0');
+const localDateKey = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+function slotDateTime(date, time){
+  const [y,m,d] = date.split('-').map(Number);
+  const [h,min] = time.split(':').map(Number);
+  return new Date(y, m-1, d, h, min, 0, 0);
+}
+function isSlotTooSoon(date, time){
+  return slotDateTime(date, time) - new Date() < MIN_ADVANCE_MINUTES * 60000;
+}
+function updateMinDate(){
+  const input = $('dateSelect');
+  if(input) input.min = localDateKey(new Date());
+}
+
+function syncBookingControls(){
+  const nome = $('therapistSelect').value;
+  document.querySelectorAll('.pro-card').forEach(c => {
+    const on = c.dataset.name === nome;
+    c.classList.toggle('selected', on);
+    c.setAttribute('aria-checked', String(on));
+  });
+  const d = $('dateSelect').value;
+  document.querySelectorAll('.chip[data-quick]').forEach(c => {
+    const alvo = new Date(); alvo.setDate(alvo.getDate() + Number(c.dataset.quick));
+    c.classList.toggle('active', d === localDateKey(alvo));
+  });
+}
+
+function renderBooking(keepSelection = false){
+  const slots = $('slots');
+  const date = $('dateSelect').value;
+  const therapist = $('therapistSelect').value;
+  const previous = keepSelection ? selectedTime : null;
+
+  updateMinDate();
+  selectedTime = null;
+  syncBookingControls();
+  updateBookingSummary();
+
+  if(!date || !therapist){
+    slots.innerHTML = `<div class="slots-note">
+      Selecione primeiro o dia e o profissional para visualizar os horários disponíveis.
+    </div>`;
+    return;
+  }
+  if(date < localDateKey(new Date())){
+    slots.innerHTML = `<div class="slots-note">Escolha o dia de hoje ou uma data futura.</div>`;
+    return;
+  }
+
+  let livres = 0;
+  const botao = time => {
+    const occupied = isSlotOccupied(date, time, therapist);
+    const tooSoon = !occupied && isSlotTooSoon(date, time);
+    const blocked = occupied || tooSoon;
+    if(!blocked) livres++;
+    const title = occupied ? 'Horário já agendado para este profissional'
+      : tooSoon ? 'Indisponível: é preciso agendar com pelo menos 30 minutos de antecedência'
+      : 'Horário disponível';
+    return `<button type="button" class="slot ${blocked?'unavailable':''}"
+      ${blocked?'disabled':''}
+      title="${title}"
+      onclick="selectTime('${time}',this)">
+      ${time}${occupied?' — ocupado':tooSoon?' — indisponível':''}
+    </button>`;
+  };
+  const grupo = (titulo, lista) => lista.length ? `<div class="slot-group"><h4>${titulo}</h4><div class="slot-grid">${lista.map(botao).join('')}</div></div>` : '';
+  const times = getSlots();
+  slots.innerHTML = grupo('Manhã', times.filter(t => t < '12:00')) + grupo('Tarde', times.filter(t => t >= '12:00'));
+
+  if(!livres){
+    slots.insertAdjacentHTML('beforeend', `<div class="slots-note">Não há mais horários disponíveis nesta data. Escolha outro dia ou profissional.</div>`);
+  }
+  if(previous){
+    const btn = [...slots.querySelectorAll('.slot:not(.unavailable)')].find(b => b.textContent.trim() === previous);
+    if(btn) selectTime(previous, btn);
+  }
+}
+
+function selectTime(time, element){
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+  element.classList.add('selected');
+  selectedTime = time;
+  updateBookingSummary();
+}
+
+function updateBookingSummary(){
+  const date = $('dateSelect').value;
+  const therapist = $('therapistSelect').value;
+  const summary = $('bookingSummary');
+  $('sumDate').textContent = date ? formatDate(date) : '—';
+  $('sumTime').textContent = selectedTime || '—';
+  $('sumPro').textContent = therapist || '—';
+
+  if(date && therapist && selectedTime && !isSlotOccupied(date, selectedTime, therapist) && !isSlotTooSoon(date, selectedTime)){
+    summary.classList.remove('hidden');
+    summary.textContent = `Tudo pronto! Sessão com ${therapist} em ${formatDate(date)} às ${selectedTime}.`;
+    $('bookBtn').disabled = false;
+  } else {
+    summary.classList.add('hidden');
+    $('bookBtn').disabled = true;
+  }
+}
+
+document.querySelectorAll('.pro-card').forEach(card => card.addEventListener('click', () => {
+  $('therapistSelect').value = card.dataset.name;
+  renderBooking();
+}));
+document.querySelectorAll('.chip[data-quick]').forEach(chip => chip.addEventListener('click', () => {
+  const alvo = new Date(); alvo.setDate(alvo.getDate() + Number(chip.dataset.quick));
+  $('dateSelect').value = localDateKey(alvo);
+  renderBooking();
+}));
+
+$('dateSelect').addEventListener('change', () => { renderBooking(); });$('therapistSelect').addEventListener('change', () => { renderBooking(); });
+
+$('bookBtn').addEventListener('click', () => {
+  const date = $('dateSelect').value;
+  const therapist = $('therapistSelect').value;
+
+  if(!date || !therapist || !selectedTime) return;
+
+  if(isSlotOccupied(date, selectedTime, therapist)){
+    showToast('Esse horário acabou de ser ocupado. Escolha outro.');
+    renderBooking();
+    return;
+  }
+  if(isSlotTooSoon(date, selectedTime)){
+    showToast('Agende com pelo menos 30 minutos de antecedência.');
+    renderBooking();
+    return;
+  }
+
+  const clientEmail = localStorage.getItem('clientEmail') || '';
+  const clientName = localStorage.getItem('clientName') || (clientEmail.includes('@') ? clientEmail.split('@')[0] : 'Cliente');
+  appointments.push({
+    id: Date.now(),
+    date,
+    time: selectedTime,
+    therapist,
+    clientName,
+    confirmed: false
+  });
+
+  saveAppointments();
+  showToast('Sessão agendada com sucesso!');
+
+  $('dateSelect').value='';$('therapistSelect').value='';
+  selectedTime=null;
+  renderBooking();
+
+  setTimeout(() => showView('appointments'), 500);
+});
+
+function loadSettings(){
+  localStorage.removeItem('grayscale');
+  const size = localStorage.getItem('fontSize') || '16';
+  const FONTE_PADRAO = "'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif";
+  let style = localStorage.getItem('fontStyle') || FONTE_PADRAO;
+  if(![...$('fontStyle').options].some(o => o.value === style)) style = FONTE_PADRAO;
+  const highContrast = localStorage.getItem('highContrast') === 'true';
+  document.documentElement.style.setProperty('--font-size', size+'px');
+  document.body.classList.toggle('high-contrast', highContrast);
+  $('highContrast').checked = highContrast;
+  document.body.style.fontFamily = style;
+  $('fontSize').value = size;
+  $('fontValue').textContent = size+'px';$('fontStyle').value = style;
+}
+
+$('fontSize').addEventListener('input', e => {
+  document.documentElement.style.setProperty('--font-size', e.target.value+'px');
+  $('fontValue').textContent = e.target.value+'px';
+  localStorage.setItem('fontSize', e.target.value);
+});
+$('fontStyle').addEventListener('change', e => { document.body.style.fontFamily = e.target.value; localStorage.setItem('fontStyle', e.target.value); });$('highContrast').addEventListener('change', e => { document.body.classList.toggle('high-contrast', e.target.checked); localStorage.setItem('highContrast', String(e.target.checked)); });$('resetSettings').addEventListener('click', () => {
+  localStorage.removeItem('fontSize');
+  localStorage.removeItem('fontStyle');
+  localStorage.removeItem('highContrast');
+  loadSettings();
+  showToast('Configurações restauradas.');
+});
+
+updateMinDate();
+setInterval(() => {
+  const emAgendamento = $('booking').classList.contains('active');
+  if(emAgendamento && $('dateSelect').value === localDateKey(new Date())) renderBooking(true);
+}, 60000);
+
+loadSettings();
+renderBooking();
+updateLoggedUser();
+
+if(location.hash === '#settings') showView('settings');
+
+localStorage.removeItem('clientLoggedIn');
+$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');
+window.addEventListener('storage', event => {
+  if (event.key === 'appointments') {
+    try {
+      const updated = JSON.parse(event.newValue || '[]');
+      appointments = Array.isArray(updated) ? updated : [];
+      renderAppointments();
+      renderBooking();
+    } catch (_) {}
+  }
+});
+</script>
+</body>
+</html>
